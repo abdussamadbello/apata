@@ -1,0 +1,4 @@
+ruamel.yaml>=0.17.0
+pathlib>=1.0.1
+typing-extensions>=4.0.0
+PyYAML>=6.0.1

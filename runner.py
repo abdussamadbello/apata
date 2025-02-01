@@ -6,11 +6,10 @@ import argparse
 import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import  Dict, Any
 import json
 import signal
 from contextlib import contextmanager
-import time
 
 from apata.config_handler import ConfigurationHandler
 from apata.system_hardener import SystemHardener, HardeningStatus, HardeningResult
