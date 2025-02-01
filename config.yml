@@ -1,0 +1,180 @@
+---
+# System Hardening Configuration
+
+file_permissions:
+  critical_files:
+    /etc/shadow:
+      mode: "0400"
+      owner: "root"
+      group: "shadow"
+    /etc/passwd:
+      mode: "0644"
+      owner: "root"
+      group: "root"
+    /etc/group:
+      mode: "0644"
+      owner: "root"
+      group: "root"
+    /etc/ssh/sshd_config:
+      mode: "0600"
+      owner: "root"
+      group: "root"
+    /etc/sudoers:
+      mode: "0440"
+      owner: "root"
+      group: "root"
+
+ssh_config:
+  settings:
+    PermitRootLogin: "no"
+    PasswordAuthentication: "no"
+    X11Forwarding: "no"
+    MaxAuthTries: "3"
+    Protocol: "2"
+    PermitEmptyPasswords: "no"
+    ClientAliveInterval: "300"
+    ClientAliveCountMax: "3"
+    LogLevel: "VERBOSE"
+    UsePAM: "yes"
+    Ciphers: "chacha20-poly1305@openssh.com,aes256-gcm@openssh.com"
+    KexAlgorithms: "curve25519-sha256@libssh.org,diffie-hellman-group16-sha512"
+    MACs: "hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com"
+
+firewall:
+  default_policies:
+    - "ufw default deny incoming"
+    - "ufw default allow outgoing"
+  allowed_services:
+    - "ufw allow ssh"
+    - "ufw allow http"
+    - "ufw allow https"
+  denied_services:
+    - "ufw deny telnet"
+    - "ufw deny rsh"
+    - "ufw deny rlogin"
+    - "ufw deny tftp"
+  settings:
+    - "ufw logging on"
+    - "ufw --force enable"
+
+sysctl:
+  network:
+    net.ipv4.conf.all.accept_redirects: "0"
+    net.ipv4.conf.all.send_redirects: "0"
+    net.ipv4.conf.all.accept_source_route: "0"
+    net.ipv4.conf.all.log_martians: "1"
+    net.ipv4.icmp_echo_ignore_broadcasts: "1"
+    net.ipv4.tcp_syncookies: "1"
+    net.ipv6.conf.all.disable_ipv6: "1"
+  kernel:
+    kernel.randomize_va_space: "2"
+    kernel.core_uses_pid: "1"
+    kernel.sysrq: "0"
+    kernel.pid_max: "65536"
+  filesystem:
+    fs.suid_dumpable: "0"
+    fs.protected_hardlinks: "1"
+    fs.protected_symlinks: "1"
+
+password_policy:
+  pwquality:
+    minlen: 12
+    dcredit: -1
+    ucredit: -1
+    lcredit: -1
+    ocredit: -1
+    minclass: 4
+    maxrepeat: 3
+    gecoscheckfull: 1
+    dictcheck: 1
+    usercheck: 1
+    enforcing: 1
+  login_defs:
+    PASS_MAX_DAYS: 90
+    PASS_MIN_DAYS: 7
+    PASS_WARN_AGE: 7
+    LOGIN_RETRIES: 3
+    LOGIN_TIMEOUT: 60
+    UMASK: "027"
+
+audit_logging:
+  rules:
+    file_system:
+      - "-w /etc/passwd -p wa -k identity"
+      - "-w /etc/group -p wa -k identity"
+      - "-w /etc/shadow -p wa -k identity"
+      - "-w /etc/sudoers -p wa -k identity"
+    system_calls:
+      - "-a always,exit -F arch=b64 -S execve -k exec"
+      - "-a always,exit -F arch=b64 -S mount -k mount"
+    user_monitoring:
+      - "-w /var/log/faillog -p wa -k logins"
+      - "-w /var/log/lastlog -p wa -k logins"
+  settings:
+    log_file: "/var/log/audit/audit.log"
+    log_format: "RAW"
+    log_group: "root"
+    priority_boost: 4
+    flush: "INCREMENTAL"
+    freq: 20
+    num_logs: 5
+    max_log_file: 8
+    max_log_file_action: "ROTATE"
+    space_left: 75
+    space_left_action: "EMAIL"
+    admin_space_left: 50
+    admin_space_left_action: "HALT"
+    disk_full_action: "HALT"
+    disk_error_action: "HALT"
+
+services:
+  disable:
+    - "telnet"
+    - "rsh"
+    - "rlogin"
+    - "rexec"
+    - "tftp"
+    - "xinetd"
+    - "avahi-daemon"
+    - "cups"
+    - "rpcbind"
+  ntp:
+    servers:
+      - "0.pool.ntp.org"
+      - "1.pool.ntp.org"
+      - "2.pool.ntp.org"
+      - "3.pool.ntp.org"
+    settings:
+      - "restrict default kod nomodify notrap nopeer noquery"
+      - "restrict -6 default kod nomodify notrap nopeer noquery"
+      - "restrict 127.0.0.1"
+      - "restrict -6 ::1"
+
+security_tools:
+  packages:
+    - "fail2ban"
+    - "rkhunter"
+    - "chkrootkit"
+    - "aide"
+    - "auditd"
+    - "lynis"
+    - "apparmor"
+    - "apparmor-utils"
+    - "apparmor-profiles"
+    - "unattended-upgrades"
+    - "needrestart"
+    - "acct"
+    - "iptables-persistent"
+    - "aide"
+    - "update-notifier-common"
+  fail2ban:
+    bantime: "1h"
+    findtime: "30m"
+    maxretry: 3
+    banaction: "iptables-multiport"
+  auto_upgrades:
+    APT::Periodic::Update-Package-Lists: 1
+    APT::Periodic::Unattended-Upgrade: 1
+    APT::Periodic::AutocleanInterval: 7
+    Unattended-Upgrade::Remove-Unused-Dependencies: true
+    Unattended-Upgrade::AutoFixInterruptedDpkg: true
