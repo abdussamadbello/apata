@@ -26,8 +26,8 @@ file_permissions:
 
 ssh_config:
   settings:
-    PermitRootLogin: "no"
-    PasswordAuthentication: "no"
+    PermitRootLogin: "yes"
+    PasswordAuthentication: "yes"
     X11Forwarding: "no"
     MaxAuthTries: "3"
     Protocol: "2"
