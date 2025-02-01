@@ -1,0 +1,120 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+test_env/
+ENV/
+.env
+.venv
+env.bak/
+venv.bak/
+
+# IDEs and Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# Logs and Databases
+*.log
+*.sqlite
+*.db
+system_hardening_*.log
+hardening_results_*.json
+hardening_results_*.yaml
+hardening_results_*.txt
+
+# Backups
+*.backup
+*.bak
+*_backup_*
+*.backup_*
+
+# System Files
+.DS_Store
+Thumbs.db
+.directory
+*.pid
+*.state
+
+# Testing
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Documentation
+docs/_build/
+site/
+
+# Distribution
+dist/
+build/
+*.tar.gz
+*.zip
+
+# Configuration Backups
+*.yaml.backup_*
+*.conf.backup_*
+system_hardening_config.*.bak
+
+# Temporary Files
+*.tmp
+*.temp
+.*.swp
+.*.swo
+*~
+
+# Local Development
+local_settings.yaml
+override.yaml
+custom_config.yaml
+
+# Security Sensitive
+*.key
+*.pem
+*.crt
+*.cer
+*.der
+*.priv
+*.pub
+
+# Operating System
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
